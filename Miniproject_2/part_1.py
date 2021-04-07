@@ -59,7 +59,8 @@ def L2_similarity(a, b):
         returns:
             the L2 similarity of the two sparse vectors
     """
-    return -sparse_norm(a - b)
+    return -np.linalg.norm(a - b)
+    #return -sparse_norm(a - b)
 
 def cosine_similarity(a, b):
     """
@@ -69,7 +70,8 @@ def cosine_similarity(a, b):
         returns:
             the cosine similarity of the two sparse vectors
     """
-    return (a @ b.T)[0,0] / (sparse_norm(a)*sparse_norm(b))
+    #return (a @ b.T)[0,0] / (sparse_norm(a)*sparse_norm(b))
+    return (a @ b.T) / (np.linalg.norm(a)*np.linalg.norm(b))
 
 dat = pd.read_csv('data50.csv', sep = ',', names = ["articleId", "wordId", "Count"])
 groups = pd.read_csv('p2_data/groups.csv', names = ['Name'])
@@ -88,15 +90,9 @@ for i,j in itertools.combinations_with_replacement(groups.index, 2):
     k = 0
     for a,b in itertools.product(articles_i, articles_j):
         # TODO: debug why implementation with sparse matrix is so inefficient
-#        pairwise_results[0, k] = jaccard_similarity(word_mat[[a, b]])
-#        pairwise_results[1, k] = L2_similarity(word_mat[a], word_mat[b])
-#        pairwise_results[2, k] = cosine_similarity(word_mat[a], word_mat[b])
-        # jaccard
-        pairwise_results[0, k] = word_mat[[a, b]].min(axis=0).sum() / word_mat[[a,b]].max(axis=0).sum()
-        # L2
-        pairwise_results[1, k] = -np.linalg.norm(word_mat[a] - word_mat[b])
-        # cosine
-        pairwise_results[2, k] = (word_mat[a] @ word_mat[b].T) / (np.linalg.norm(word_mat[a])*np.linalg.norm(word_mat[b]))
+        pairwise_results[0, k] = jaccard_similarity(word_mat[[a, b]])
+        pairwise_results[1, k] = L2_similarity(word_mat[a], word_mat[b])
+        pairwise_results[2, k] = cosine_similarity(word_mat[a], word_mat[b])
         k += 1
     similarity_matrix[:,i,j] = similarity_matrix[:,j,i] = pairwise_results.mean(axis = 1)
 
