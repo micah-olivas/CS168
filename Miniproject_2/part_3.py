@@ -30,12 +30,12 @@ def makeHeatMap(data, names, color, outputFileName):
 		plt.close()
 
 ### part 1
-try:
-    wow = open('data50.csv')
-    print(wow)
 
-finally:
-    wow.close()
+with open('/Users/micaholivas/Desktop/Coursework/Algorithmic_CS_168/Miniprojects/Miniproject_2/data50.csv', 'rt') as data:
+    data_df = pd.read_csv(data, sep = ',', names = ["articleId", "wordId", "count"])
+    print(data_df)
+
+
 ### part 2
 
 ### part 3
@@ -43,9 +43,8 @@ finally:
 ## (a)
 
 # similarity search with cosine similarity nn classification
-(sum(x*y)/
 
-array = np.array([[1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], [1,0], [0,1], ])
+array = np.array([[1,0], [0,1], [1,0], [0,1]])
 np.shape(array)
 
 # compute matrix of (A,B)
