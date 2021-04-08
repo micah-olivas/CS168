@@ -34,8 +34,8 @@ def makeHeatMap(data, names, color, similarity_metric, outputFileName):
 
 def jaccard_similarity(mat):
     """
-        inputs: 
-            -mat : a 2 row matrix 
+        inputs:
+            -mat : a 2 row matrix
         returns:
             Jaccard similarity of the 2 rows
     """
@@ -55,7 +55,7 @@ def L2_similarity(a, b):
     """
         inputs:
             -a : a csr sparse vector
-            -b : another csr sparse vector 
+            -b : another csr sparse vector
         returns:
             the L2 similarity of the two sparse vectors
     """
@@ -66,7 +66,7 @@ def cosine_similarity(a, b):
     """
         inputs:
             -a : a csr sparse vector
-            -b : another csr sparse vector 
+            -b : another csr sparse vector
         returns:
             the cosine similarity of the two sparse vectors
     """
@@ -83,7 +83,7 @@ word_mat = sparse.csr_matrix((dat.Count, (dat.articleId, dat.wordId))).todense()
 
 similarity_matrix = np.zeros((3,len(groups),len(groups)))
 for i,j in itertools.combinations_with_replacement(groups.index, 2):
-    # row number in file is 0-indexed but labels and articles are 1-indexed so we add 1 
+    # row number in file is 0-indexed but labels and articles are 1-indexed so we add 1
     articles_i = labels[labels.Label == i + 1].index + 1
     articles_j = labels[labels.Label == j + 1].index + 1
     pairwise_results = np.zeros((3, len(articles_i)*len(articles_j)))
@@ -99,4 +99,3 @@ for i,j in itertools.combinations_with_replacement(groups.index, 2):
 makeHeatMap(similarity_matrix[0], groups.Name, 'magma', 'Jaccard Similarity', 'figs/part1_jaccard.png')
 makeHeatMap(similarity_matrix[1], groups.Name, 'magma', 'L2 Similarity', 'figs/part1_l2.png')
 makeHeatMap(similarity_matrix[2], groups.Name, 'magma', 'Cosine Similarity', 'figs/part1_cosine.png')
-

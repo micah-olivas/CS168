@@ -36,6 +36,12 @@ with open('/Users/micaholivas/Desktop/Coursework/Algorithmic_CS_168/Miniprojects
     print(data_df)
 
 
+
+
+
+
+
+
 ### part 2
 
 ### part 3
