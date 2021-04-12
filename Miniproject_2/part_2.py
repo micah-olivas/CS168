@@ -36,7 +36,7 @@ def build_classification_matrix(data_mat, groups=groups, labels=labels):
 
 def compute_classification_accuracy(classification_mat):
     return classification_mat.diagonal().sum() / classification_mat.sum()
-    
+
 baseline_classification_matrix = build_classification_matrix(word_mat)
 makeHeatMap(baseline_classification_matrix, groups.Name, 'magma', 'Baseline Classification', 'figs/part2.baseline_classification.png')
 print(compute_classification_accuracy(baseline_classification_matrix))
