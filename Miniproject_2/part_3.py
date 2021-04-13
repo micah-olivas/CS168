@@ -54,12 +54,17 @@ v = np.array([2,6,3,5,8,2,4,3,4,6])
 build_hashtables(v,10,10,10)
 
 # Classification
-def classify_hashed(q):
+def classify_hashed(q,tables):
 	"""
 		Inputs:
 		-q: a vector with which to query the l hashtables for similarity
+		-tables: a set of hastables for classification
 	"""
 
+
+
+v_hashtables = build_hashtables(v,d,k,l)
+classify_hashed()
 
 # implementation
 l = 128
