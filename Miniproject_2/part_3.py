@@ -85,25 +85,11 @@ def hash_vectors(v_array,d,k,l):
 
 	return dict(zip(list(v_array), hashed_array))
 
-
-    return classification_matrix
-
-
-v_hashtables = build_hashtables(v,d,k,l)
-classify_hashed()
-
-#
-
-## 3.c
-l = 128
-d = range(5,21)
-
 ### ben stuff
 
 l = 128
 ds = list(range(5,21))
 k = word_mat.shape[1]
-
 
 def compute_hash_val(v, mat):
     sign_vec = np.sign(v @ mat)
@@ -136,7 +122,7 @@ def build_classification_matrix(data_mat, mats, hash_tables, groups=groups, labe
     classification_matrix = np.zeros((len(groups),len(groups)))
 
     Sqs = []
-    
+
     for i in range(len(labels)):
         true_label = labels.loc[i,'Label']
         doc = data_mat[i]
@@ -152,22 +138,27 @@ def build_classification_matrix(data_mat, mats, hash_tables, groups=groups, labe
 
     return classification_matrix, np.mean(Sqs)
 
+
 class_mat = build_classification_matrix(word_mat, random_mats, hash_tables)
 
+## 3.b
+l = 177.5
+d = 134.4658
+k = 1
+N = 1000000
 
+l*k*d
+k*N*(1 - (1 - (1 - .2/3.14159)**d)**l)
 
-
-# compute classification error with d
+## 3.c
+# compute classification error at range of d vals
 def compute_classification_accuracy(classification_mat):
     return classification_mat.diagonal().sum() / classification_mat.sum()
 
-class_accuracies = []
-for d_i in range(5,21):
-	hashtables_di = build_hashtables(d_i,)
-	class_di = classify_hashed()
-	class_accuracies.append(compute_classification_accuracy())
+def plot_classification_errors(dat_mat):
+	class_accuracies = []
 
-plt.plot(range(5,21), class_accuracies, color='green', marker='o', linestyle='dashed', linewidth=2, markersize=12)
+	for d_i in range(5,21):
 		hashtables_empty_di, hashtables_d_i = build_hashtables(dat_mat, d_i, k, l)
 		class_di = build_classification_matrix()
 		class_accuracies.append(compute_classification_accuracy(hashtables_d_i, class_di))
