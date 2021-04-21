@@ -17,11 +17,13 @@ def l2_reg(X, y):
     XTX = np.matmul(X,X_T)
     XTX_inv = np.linalg.inv(XTX)
 
-    a = np.matmul(X_T,XTX_inv).dot(y)
+    a_hat = np.matmul(X_T,XTX_inv).dot(y)
 
-    return a
+    return a_hat
 
 l2_reg(X, y)
+
+
 
 # 1.b gradient descent
 def descend_gradient(vector, step_size, n_iter):
@@ -32,8 +34,21 @@ def descend_gradient(vector, step_size, n_iter):
 
 descend_gradient()
 
-# 1.c stochastic gradient descent
-def stochastic_gradDesc(vector, step_size, n_iter):
+# 1.c stochastic gradient descent using ben's method
+train_n = 100
+
+def sgd(a_hat, X, y, alpha, n=train_n, n_iter=1000):
+    a_hat = a_guess
+    for i in range(n_iter):
+        idx = np.random.randint(n)
+        x_i = X[idx]
+        y_i = y[idx]
+        grad = error_gradient(x_i, a_hat, y_i)
+        # before = error(x_i,a_hat,y_i)
+        a_hat = a_hat - alpha * grad
+        # after = error(x_i,a_hat,y_i)
+        # assert before > after
+    return a_hat
 
 
 
