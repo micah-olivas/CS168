@@ -31,6 +31,11 @@ a_hat = l2_reg(X, y)
 y_hat = X.dot(a_hat) + np.random.normal(0,0.5,size=(train_n,1))
 y_zeroes = X.dot(a_zeroes) + np.random.normal(0,0.5,size=(train_n,1))
 
+def error(X,a,y):
+    return np.square(np.linalg.norm(X.dot(a)-y))
+
+error()
+
 print(y_hat, y_zeroes)
 
 # 1.b gradient descent
@@ -44,7 +49,7 @@ def descend_gradient(a_guess, X, y, step_size, n_train, n_iter=20):
     a_hat = a_guess
     iter_number = []
     obj_fun_values = []
-    for i in range(n_train):
+    for i in range(n_iter):
         x_i = X[i]
         y_i = y[i]
         a_hat = a_hat - (step_size * get_gradient(x_i, a_hat, y_i))
@@ -60,6 +65,7 @@ a_hat_gd_0007, iter_numbers_0007, obj_fun_values_0007 = descend_gradient(a_hat, 
 plt.plot(iter_numbers_00005, obj_fun_values_00005, 'ro')
 plt.plot(iter_numbers_0005, obj_fun_values_0005, 'mo')
 plt.plot(iter_numbers_0007, obj_fun_values_0007, 'bo')
+
 plt.xlabel('Iteration')
 plt.ylabel('Objective Function Value (Error)')
 plt.savefig('figs/part1b.gd_all.png')
