@@ -18,14 +18,14 @@ def random_weights(X_train, y_train, X_test, y_test):
     test_error = norm_error(X_test, y_test, a_est)
     return a_est, train_error, test_error
     
-def PCA_compute_exact(X_train, y_train, X_test, y_test, K = 100):
+def PCA_compute_exact(X_train, y_train, X_test, y_test, l = .7, K = 100):
     u, s, vh = np.linalg.svd(X_train, full_matrices = False)
 
     # reduce dimensions to the number of training samples
     X_prime = X_train @ vh.T[:,:K]
 
-    # compute exact L2 solution of X in lower dimension, than project back to full D dimensions
-    a_est = vh.T[:,:K] @ np.linalg.inv(X_prime.T @ X_prime) @ X_prime.T @ y_train
+    # compute exact L2 solution of X in lower dimension, than project back to full D
+    a_est = vh.T[:,:K] @ np.linalg.inv(X_prime.T @ X_prime + np.diag([l] * K)) @ X_prime.T @ y_train
 
     # compute normalized testing error
     train_error = norm_error(X_train, y_train, a_est)
@@ -75,12 +75,6 @@ def PCA_elastic_net(X_train, y_train, X_test, y_test, K = 100):
     test_error = np.linalg.norm( X_test @ a_est - y_test ) / np.linalg.norm(y_test)
     return a_est, train_error, test_error
 
-def exact_solution(X_train, y_train, X_test, y_test):
-    a_est = np.linalg.inv(X_train.T @ X_train) @ X_train.T @ y_train
-    train_error = np.linalg.norm( X_train @ a_est - y_train) / np.linalg.norm(y_train)
-    test_error = np.linalg.norm( X_test @ a_est - y_test ) / np.linalg.norm(y_test)
-    return a_est, train_error, test_error
-
 
 ## Regression
 trials = 200
@@ -88,23 +82,21 @@ train_n = 100
 test_n = 1000
 d = 200
 
-# part a)
-results = np.zeros((2, trials))
-for j in range(trials):
-    X_train = np.random.normal(0, 1, size=(train_n, d))
-    #a_true = np.random.normal(0, 1, size=(d, 1))
-    a_true = np.random.normal(0,1, size=(d,1)) 
-    y_train = X_train.dot(a_true) + np.random.normal(0, 0.5,size=(train_n, 1))
-    X_test = np.random.normal(0, 1, size=(test_n,d))
-    y_test = X_test.dot(a_true) + np.random.normal(0, 0.5,size=(test_n, 1))
-    #a_est, train_error, test_error = PCA_compute_exact(X_train, y_train, X_test, y_test, K = 100)
-    #a_est, train_error, test_error = Elastic_net(X_train, y_train, X_test, y_test, K = 100)
-    #a_est, train_error, test_error = Lasso_reg(X_train, y_train, X_test, y_test)
-    a_est, train_error, test_error = PCA_elastic_net(X_train, y_train, X_test, y_test, K = 100)
-    #a_est, train_error, test_error = random_weights(X_train, y_train, X_test, y_test)
-    results[0, j] =  train_error
-    results[1, j] = test_error
-print(results.mean(axis = 1))
+## part a)
+for l in [0]:
+    results = np.zeros((2, trials))
+    test_errors = []
+    for j in range(trials):
+        X_train = np.random.normal(0, 1, size=(train_n, d))
+        a_true = np.random.normal(0, 1, size=(d, 1))
+        a_true = np.random.normal(0,1, size=(d,1)) 
+        y_train = X_train.dot(a_true) + np.random.normal(0, 0.5,size=(train_n, 1))
+        X_test = np.random.normal(0, 1, size=(test_n,d))
+        y_test = X_test.dot(a_true) + np.random.normal(0, 0.5,size=(test_n, 1))
+        a_est, train_error, test_error = PCA_compute_exact(X_train, y_train, X_test, y_test, l, K = 100)
+        test_errors.append(test_error)
+    print(np.mean(test_errors))
+
 
 # part b)
 results = np.zeros((2, trials))
@@ -114,13 +106,8 @@ for j in range(trials):
     y_train = X_train.dot(a_true) + np.random.normal(0, 0.5,size=(train_n, 1))
     X_test = np.random.normal(0, 1, size=(test_n,d))
     y_test = X_test.dot(a_true) + np.random.normal(0, 0.5,size=(test_n, 1))
-    #a_est, train_error, test_error = PCA_compute_exact(X_train, y_train, X_test, y_test, K = 100)
-    #a_est, train_error, test_error = Elastic_net(X_train, y_train, X_test, y_test, K = 100)
-    #a_est, train_error, test_error = Lasso_reg(X_train, y_train, X_test, y_test)
-    a_est, train_error, test_error = PCA_elastic_net(X_train, y_train, X_test, y_test, K = 100)
-    #a_est, train_error, test_error = random_weights(X_train, y_train, X_test, y_test)
+    a_est, train_error, test_error = PCA_compute_exact(X_train, y_train, X_test, y_test, K = 100)
     results[0, j] =  train_error
     results[1, j] = test_error
-print(('train', 'test'))
 print(results.mean(axis = 1))
 
