@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import scipy.sparse as sparse
 import math
 
 # 1.a Confirming co-occur, dictionary processing
@@ -15,19 +16,29 @@ def norm_matrix(elem):
     return elem
 
 norm_co_occur = co_occur.applymap(norm_matrix)
-top_co_occur = norm_co_occur.iloc[:3000, :3000]
+top_co_occur = norm_co_occur.iloc[:10000, :10000]
 
 # Single Value Decomposition
-u, s, vh = np.linalg.svd(top_co_occur)
-s
+u, d, v = np.linalg.svd(norm_co_occur)
+u = pd.DataFrame(u)
+d = pd.DataFrame(d)
+v = pd.DataFrame(v)
+u.to_csv('svd_u.csv')
+d.to_csv('svd_d.csv')
+v.to_csv('svd_v.csv')
 
+pd.read_csv('Miniproject_5/svd_d.csv', sep = ',')
+
+np.shape(u)
+np.shape(s)
 # Plot singular values
 plt.scatter(y = s, x = list(range(len(s))))
 plt.ylabel('Singular Value')
 plt.show()
 plt.savefig('Miniproject_5/mp5-part1b.png', dpi = 300)
 
-# 1.c index single
+# 1.c index single word
+
 
 # Get co-occurrence values from word pair
 def words_co_occurence(word1, word2):
@@ -49,10 +60,10 @@ def words_co_occurence(word1, word2):
 
     return co_occurrence
 
-words_co_occurence("chicago", "sacramento")
+words_co_occurence("stanford", "stanford")
 
 # 1.d.i
-v_words = ["boy", "girl", "brother", "sister", "king", "queen", he, she, john, mary, wall, tree]
+v_words = ["boy", "girl", "brother", "sister", "king", "queen", "he", "she", "john", "mary", "wall", "tree"]
 
 # 1.e.i
 def cosine_similarity(a, b):
@@ -67,6 +78,4 @@ def cosine_similarity(a, b):
     return (a @ b.T) / (np.linalg.norm(a)*np.linalg.norm(b))
 
 
-vec1 = [1,2,3,4,5]
-vec2 = [2,3,4,5,6]
-vec3 = [9,9,9,9,9]
+cosine_similarity(vec2,vec4)
