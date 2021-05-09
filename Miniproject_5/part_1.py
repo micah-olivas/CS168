@@ -120,24 +120,85 @@ def words_co_occurence(word1, word2):
     return co_occurrence
 
 # 1.d.i
-v_words = ["boy", "girl", "brother", "sister", "king", "queen", "he", "she", "john", "mary", "wall", "tree"]
 
-np.linalg.norm(u[['1']])
-u[[1]]
+# l2 norm U
+u_norm = u.div(np.linalg.norm(u, axis=1), axis=0)
 
-
-
-# 1.e.i
-def cosine_similarity(a, b):
+# man and woman embeddings
+def get_sing_vector(i):
     """
         inputs:
-            -a : a csr sparse vector
-            -b : another csr sparse vector
+            -i: the index of a word in matrix M
         returns:
-            the cosine similarity of the two sparse vectors
+            the largest value in a singular vector
     """
-    #return (a @ b.T)[0,0] / (sparse_norm(a)*sparse_norm(b))
-    return (a @ b.T) / (np.linalg.norm(a)*np.linalg.norm(b))
+    i = str(i)
+
+    # get and sort ui
+    ui = u_norm[[i]]
+    ui = ui.sort_values(ascending=False, by=[i]).round(decimals=6)
+
+    return ui
+
+man_idx = words_to_idxs(["man"])
+woman_idx = words_to_idxs(["woman"])
+
+man_sing = np.array(get_sing_vector(man_idx[0]))
+woman_sing = np.array(get_sing_vector(woman_idx[0]))
+diff_sing = np.array(woman_sing - man_sing)
+
+# word vectors
+v_words = ["boy", "girl", "brother", "sister", "king", "queen", "he", "she", "john", "mary", "wall", "tree"]
+v_idxs = words_to_idxs(v_words)
+v_idxs
+
+# get embeddings for v_words
+v_singulars = [np.array(get_sing_vector(i)) for i in v_idxs]
+
+# define projections function and calculate
+def project_vecs(a,b):
+    return np.dot(np.squeeze(a), np.squeeze(b)) / np.linalg.norm(b)
+
+v_projections = [project_vecs(x, diff_sing) for x in v_singulars]
+v_projections
+
+# create and sort dictionary
+v_dict = {v_words[i]: v_projections[i] for i in range(len(v_words))}
+v_dict = {k: v for k, v in sorted(v_dict.items(), key=lambda item: item[1])}
+
+# plot
+plt.barh(range(len(v_dict.keys())), v_dict.values())
+plt.yticks(range(len(v_dict.keys())), v_dict.keys())
+plt.ylabel('Projected Embedding')
+plt.xlabel('Projection onto v')
+plt.tight_layout()
+plt.savefig('Miniproject_5/part_1d.png', dpi = 100)
+
+# 1.d.ii
+
+# word vectors
+v_words = ["math", "matrix", "history", "nurse", "doctor", "pilot", "teacher", "engineer", "science", "arts", "literature", "bob", "alice"]
+v_idxs = words_to_idxs(v_words)
+v_idxs
+
+# get embeddings for v_words
+v_singulars = [np.array(get_sing_vector(i)) for i in v_idxs]
+
+# define projections function and calculate
+def project_vecs(a,b):
+    return np.dot(np.squeeze(a), np.squeeze(b)) / np.linalg.norm(b)
+
+v_projections = [project_vecs(x, diff_sing) for x in v_singulars]
 
 
-cosine_similarity(vec2,vec4)
+# create and sort dictionary
+v_dict = {v_words[i]: v_projections[i] for i in range(len(v_words))}
+v_dict = {k: v for k, v in sorted(v_dict.items(), key=lambda item: item[1])}
+
+# plot
+plt.barh(range(len(v_dict.keys())), v_dict.values())
+plt.yticks(range(len(v_dict.keys())), v_dict.keys())
+plt.ylabel('Projected Embedding')
+plt.xlabel('Projection onto v')
+plt.tight_layout()
+plt.savefig('Miniproject_5/part_1d_ii.png', dpi = 100)
