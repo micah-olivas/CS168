@@ -36,12 +36,13 @@ values, counts = np.unique(v[:,0].round(3), return_counts=True)
 print(list(zip(values, counts)))
 
 # part 2d, explore non-zero eigenvalue eigenvectors to find subsets with low conductance
-plt.scatter(range(len(v)), v[:,6]) # plot singular values
-plt.hlines(y = -.045, color='red', xmin=0,xmax=len(v), linestyles='dashed', label="S_1")
-plt.hlines(y = 0.002, color = 'green', xmin=0, xmax=len(v), linestyles='dashed', label="S_2")
-plt.hlines(y = -.044, color = 'green', xmin=0, xmax=len(v), linestyles='dashed')
-plt.legend()
-plt.savefig('part2d_eigenvector7.pdf')
+plt.scatter(range(len(v)), v[:,6]) # plot
+plt.fill_between([0,len(v)], [-.04], [-0.12], color='red', alpha=0.1, label='S_1')
+plt.fill_between([0,len(v)], [-.04], [0], color='green', alpha=0.1, label='S_2')
+plt.fill_between([0,len(v)], [0.01335], [0.002], color='purple', alpha=0.2, label='S_3')
+plt.legend(bbox_to_anchor=(-.1,.5))
+plt.tight_layout()
+plt.savefig('/Users/micaholivas/Desktop/Coursework/Algorithms_CS_168/Miniproject_6/proj6_part2d_eigenvector7.png')
 
 
 def cond(A, S):
@@ -56,21 +57,29 @@ def cond(A, S):
     """
     V = np.array(range(len(A)))
     T = np.setdiff1d(V,S, assume_unique = True) #T is complement of S (V\S)
-    return 2*A[S,:][:,T].sum() / min(A[S,:][:,S].sum(), A[T,:][:,T].sum())
-print(v[:,6])
-S_1 = np.array(np.where(v[:,6] < -.045))[0,:]
-print(cond(A,S_1))
+    # return 2*A[S,:][:,T].sum() / min(A[S,:][:,S].sum(), A[T,:][:,T].sum())
+    return A[S,:][:,T].sum() / min(A[S,:].sum(), A[T,:].sum()) # ammended conductance formula
+
+S_1 = np.array(np.where(v[:,6] < -.04))[0,:]
+index = np.random.choice(S_1.shape[0], 10, replace=False)
+print(round(cond(A,S_1), 4), len(S_1), S_1[index])
 
 S_2 = np.array(np.where((v[:,6] < 0) & (v[:,6] >= -.4)))[0,:]
-print(cond(A, S_2))
+index = np.random.choice(S_2.shape[0], 10, replace=False)
+print(round(cond(A, S_2), 4), len(S_2), S_2[index])
 
-# find orthogonal set with low Conductance
-def S3_search():
+S_3 = np.array(np.where((v[:,6] < 0.01335) & (v[:,6] >= 0.01)))[0,:]
+index = np.random.choice(S_3.shape[0], 10, replace=False)
+print(round(cond(A,S_3), 4), len(S_3), S_3[index])
 
 #part 1e, Null Conductance model
 trials = 10000
-null_cond = [ cond(A, np.random.choice(range(n), size=150, replace=False)) for _ in range(trials)]
+S_rand = np.random.choice(range(n), size=150, replace=False)
 
+cond(A, S_rand)
+
+null_cond = [cond(A, np.random.choice(range(n), size=150, replace=False)) for _ in range(trials)]
+np.mean(null_cond)
 plt.hist(null_cond, bins=100)
 plt.xlabel('Conductance')
 plt.savefig('/Users/micaholivas/Desktop/Coursework/Algorithms_CS_168/Miniproject_6/proj6_part2e.null_conductance.png')

@@ -52,7 +52,7 @@ def calc_and_sort_eigenvectors(mat):
     return e_vecs
 
 def plot_eigenvectors(e_vecs, ax, n, scatter=True):
-    if scatter: 
+    if scatter:
         ax.scatter(range(len(e_vecs)), e_vecs[:,0], c='xkcd:red', label='k=1')
         ax.scatter(range(len(e_vecs)), e_vecs[:,1], c='xkcd:pink', label='k=2')
         ax.scatter(range(len(e_vecs)), e_vecs[:,n-2], c='xkcd:periwinkle', label='k=n-1')
@@ -81,7 +81,7 @@ def build_adjacency(xs, n, thresh):
                 A[j,i] = 1
     D = np.diag(A.sum(axis=1))
     L = D-A
-    return L,A  
+    return L,A
 
 
 
@@ -97,7 +97,7 @@ for i in range(4):
     A_vecs = calc_and_sort_eigenvectors(A)
     plot_eigenvectors(A_vecs, axs[i,1], n, scatter=False)
     axs[i,0].set_ylabel('Graph {}'.format(i+1))
-    
+
 axs[0,0].set_title('L')
 axs[0,1].set_title('A')
 axs[3,0].set_xlabel('Coordinate')
@@ -106,7 +106,7 @@ axs[3,1].set_xlabel('Coordinate')
 plt.tight_layout()
 plt.savefig('figs/miniproject6.part1.b.png')
 plt.clf()
-            
+
 # part c
 fig, axs = plt.subplots(2,2, figsize=(10,10), sharex=True, sharey=True)
 ax_arr = axs.ravel()
@@ -121,7 +121,7 @@ for i in range(4):
 axs[0,0].set_ylabel('Coordinate 3')
 axs[1,0].set_ylabel('Coordinate 3')
 axs[1,0].set_xlabel('Coordinate 2')
-axs[1,1].set_xlabel('Coordinate 2')    
+axs[1,1].set_xlabel('Coordinate 2')
 
 plt.tight_layout()
 plt.savefig('figs/miniproject6.part1.c.png')
@@ -132,7 +132,9 @@ n = 500
 thresh = 0.25
 
 xs = np.random.uniform(size=(n,2))
+xs
 L,A = build_adjacency(xs, n, thresh)
+L
 L_vecs = calc_and_sort_eigenvectors(L)
 
 idx = (xs[:,0] < 0.5) & (xs[:,1] < 0.5)
@@ -144,4 +146,3 @@ ax.scatter(L_vecs[~idx,1],L_vecs[~idx,2], c='k')
 plt.tight_layout()
 plt.savefig('figs/miniproject6.part1.d.png')
 plt.clf()
-
