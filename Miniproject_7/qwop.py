@@ -224,5 +224,5 @@ anim = animation.FuncAnimation(fig, animate,
                                init_func=init,
                                frames=len(data),
                                interval=20,repeat=False)
-#anim.save('animation.gif', fps=50)
+anim.save('/Users/micaholivas/Desktop/Coursework/Algorithms_CS_168/Miniproject_7animation.gif', fps=50)
 plt.show()
