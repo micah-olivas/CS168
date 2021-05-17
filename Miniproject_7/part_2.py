@@ -79,37 +79,62 @@ def switch_two(route):
 
     new[ix1], new[ix2] = new[ix2], new[ix1]
     return new
-
-iter = 1000
-
 def maxiter(dat, T, iter):
     route = random_walk(dat)
     best_route = np.copy(route)
+    route_distances = [] #store distances for plotting
 
     for i in range(iter):
         new_route = switch_two(route)
         old_route_dist = total_distance(route)
         new_route_dist = total_distance(new_route)
+        route_distances.append(new_route_dist)
         dist_best = total_distance(best_route)
 
         dist_change = new_route_dist - old_route_dist
-        if (dist_change < 0) or (T > 0 and (np.random.uniform(0,1) < np.exp(-(dist_change/T))):
+        if (dist_change < 0) or (T > 0 and (np.random.uniform(0,1) < np.exp(-dist_change/T))):
             route = np.copy(new_route)
         if new_route_dist < dist_best:
             best_route = np.copy(new_route)
 
-        plot_trip(best_route)
+        # plot_trip(best_route)
 
-    print(dist_best)
+    return dist_best, route_distances
 
 # part 2b
 temps = [0, 1, 10, 1000]
-MAXITER = 100
+trials = 10
+MAXITER = 10000
+
+idxs = [(0,0), (0,1), (1,0), (1,1)]
+temp_idx = list(zip(temps, idxs))
+
+fig, axs = plt.subplots(2, 2)
+for ind in temp_idx:
+    for i in range(trials):
+        best, dist_iters = maxiter(dat, ind[0], MAXITER)
+        axs[ind[1]].plot(range(MAXITER), dist_iters, )
+        axs[ind[1]].set_title('temp '+str(ind[0]))
+
+for ax in axs.flat:
+    ax.set(xlabel='MCMC Iteration', ylabel='Trip Distance')
+
+# Hide x labels and tick labels for top plots and y ticks for right plots.
+for ax in axs.flat:
+    ax.label_outer()
+
+fig.set_figheight(6)
+fig.set_figwidth(7)
+fig.tight_layout()
+fig.show()
+fig.savefig('/Users/micaholivas/Desktop/Coursework/Algorithms_CS_168/Miniproject_7/proj7_part2b')
+
+
 
 for t in temps:
-    maxiter(dat, 1, MAXITER)
+    for i in range(trials):
+        best, dist_iters = maxiter(dat, 1, MAXITER)
+        plt.line(range(), dist_iters)
 
 
-
-
-route
+# part 2c
