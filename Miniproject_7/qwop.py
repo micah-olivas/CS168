@@ -220,6 +220,8 @@ def animate(j):
     head.center = (data[j][0][5], data[j][1][5])
     return patch,head
 
+np.exp(-0.01)
+
 anim = animation.FuncAnimation(fig, animate,
                                init_func=init,
                                frames=len(data),
