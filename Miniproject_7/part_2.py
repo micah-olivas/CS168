@@ -44,25 +44,24 @@ def total_distance(route):
 
 # define MCMC scheme
 # part 2b and 2c
-temps = [0, 1, 5, 10]
+temps = [0, 1, 10, 1000]
 trials = 10
-MAXITER = 100
+MAXITER = 10000
 
 # define MCMC, switching two stops at every iteration
 def switch_any_two(route):
     new = route[:]
     ix1 = np.random.randint(len(new))
     ix2 = np.random.randint(len(new))
-
     new[ix1], new[ix2] = new[ix2], new[ix1]
     return new
+
 def switch_adj_two(route):
     new = np.copy(route)
     ix1 = np.random.randint(len(new))
     ix2 = ix1 + np.random.choice([-1,1])
     if ix2 == 31:
         ix2 = 0
-
     new[ix1], new[ix2] = new[ix2], new[ix1]
     return new
 
