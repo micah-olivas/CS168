@@ -51,6 +51,16 @@ print("a. {}".format(pi_a))
 print("b. {}".format(pi_b))
 print("c. {}".format(pi_c))
 
+## Power Iteration algorithm to find stationary distribution
+max_iterations = 1000
+pi_a = get_s0(10)
+pi_b = get_s0(9)
+pi_c = get_s0(9)
+for i in range(max_iterations):
+    pi_a = pi_a @ T_a
+    pi_b = pi_b @ T_b
+    pi_c = pi_c @ T_c
+
 # set stationary dit of 10 node cycle graph to uniform since it is aperiodic
 pi_a = [1/10] * 10
 
@@ -85,12 +95,23 @@ tvd_c = [ .5*sum(abs((s := s @ T_c) - pi_c)) for i in range(max_t) ]
 x = range(max_t)
 
 plt.figure()
-plt.plot(x, tvd_a, label = "a", color = 'red')
-plt.plot(x, tvd_b, label = "b", color = 'blue')
-plt.plot(x, tvd_c, label = "c", color = 'green')
+plt.plot(x, tvd_a, label = "(1) cycle graph n = 10", color = 'red')
+plt.plot(x, tvd_b, label = "(2) cycle graph n = 9", color = 'blue')
+plt.plot(x, tvd_c, label = "(3) cycle graph n = 9 with extra edge", color = 'green')
 plt.legend()
 plt.savefig('mp7_part1b.png')
 
+d,u = np.linalg.eig(T_a)
+d.sort()
+print(d[-2])
+
+d,u = np.linalg.eig(T_b)
+d.sort()
+print(d[-2])
+
+d,u = np.linalg.eig(T_c)
+d.sort()
+print(d[-2])
 # extra graphs for part c
 def calc_mixing_stats(T, n, t):
     #compute stationary dist with power iteration
